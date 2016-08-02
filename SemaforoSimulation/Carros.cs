@@ -9,7 +9,7 @@ namespace SemaforoSimulation
 {
 
 
-    public class Carros
+    public class Carros 
     {
         public int TiempoDeEspera;
 
@@ -19,9 +19,12 @@ namespace SemaforoSimulation
 
         public Carros(Rutas RutaInicio)
         {
+            TiempoDeEspera = 0;
             this.RutaInicio = RutaInicio;
         }
 
+
+        
     }
 
 
