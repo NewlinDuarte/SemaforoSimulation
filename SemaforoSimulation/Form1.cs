@@ -19,19 +19,19 @@ namespace SemaforoSimulation
 
     public partial class Form1 : Form
     {
-      int TiempoVerdeSem1;
-      int TiempoVerdeSem2;
-      int TiempoVerdeDoblarSem2;
-      int TiempoVerdeSem3;
-      int TiempoAmarilloSem1;
-      int TiempoAmarilloSem2;
-      int TiempoAmarilloSem3;
-      int TiempoRojoSem1;
-      int TiempoRojoSem2;
-      int TiempoRojoSem3;
+        int tiempoVerdeSem1;
+        int tiempoVerdeSem2;
+        int tiempoVerdeDoblarSem2;
+        int tiempoVerdeSem3;
+        int tiempoAmarilloSem1;
+        int tiempoAmarilloSem2;
+        int tiempoAmarilloSem3;
+        int tiempoRojoSem1;
+        int tiempoRojoSem2;
+        int tiempoRojoSem3;
 
         //enum que define las rutas
-      
+
         //Totales de carros que van de una ruta a otra
         int carrosR1R2;
         int carrosR1R3;
@@ -49,28 +49,46 @@ namespace SemaforoSimulation
         int esperaSemaforo3;
 
         //Tiempo de simulacion en segundos
-        int Tiempo;
+        int tiempo;
 
-
+        //Guarda los carros en espera en cada semaforo (numerado respectivamente)
+        List<Carros> carrosFila1 = new List<Carros>();
+        List<Carros> carrosFila2 = new List<Carros>();
+        List<Carros> carrosFila3 = new List<Carros>();
 
         public Form1()
         {
+            //Inicializando valores por defecto
             Random rand = new Random();
-            Tiempo = 28800;
-            Semaforo Semaforo1 = new Semaforo(30,27,3,2);
+            tiempo = 28800;
+            tiempoEspera = 0;
+            //Inicializando Semaforos (Semaforo 1 y 2 inician en verde)
+            Semaforo Semaforo1 = new Semaforo(30, 27, 3, 2);
             Semaforo1.Rojo_Verde();
-            List<Carros> carrosFila1 = new List<Carros>();
-            Semaforo Semaforo2 = new Semaforo(20, 27, 3,10, 2);
+
+            Semaforo Semaforo2 = new Semaforo(20, 27, 3, 10, 2);
             Semaforo2.Rojo_Verde();
-            List<Carros> carrosFila2 = new List<Carros>();
+
             Semaforo Semaforo3 = new Semaforo(40, 17, 3, 1);
             Semaforo3.Amarillo_Rojo();
-            List<Carros> carrosFila3 = new List<Carros>();
-            for (int x = 1; x <= Tiempo; x++)
+
+            // Inicializando los Tiempos de semaforos
+            tiempoVerdeSem1 = 0;
+            tiempoVerdeSem2 = 0;
+            tiempoVerdeDoblarSem2 = 0;
+            tiempoVerdeSem3 = 0;
+            tiempoAmarilloSem1 = 0;
+            tiempoAmarilloSem2 = 0;
+            tiempoAmarilloSem3 = 0;
+            tiempoRojoSem1 = 0;
+            tiempoRojoSem2 = 0;
+            tiempoRojoSem3 = 0;
+
+            for (int x = 1; x <= tiempo; x++)
             {
-                
+
                 //agregar nuevo carro a lista 
-                if(rand.Next(1,101) <= 40)
+                if (rand.Next(1, 101) <= 40)
                 {
                     Carros carro = new Carros(0);
                     carro.RutaDestino = (Rutas)rand.Next(0, 3);
@@ -89,19 +107,232 @@ namespace SemaforoSimulation
                     carrosFila3.Add(carro);
                 }
 
+                //Rojo de Semaforo 3 tiene que verificar existencia de carros en R1
+                if (Semaforo3.Rojo && carrosFila3.Count > 0 && carrosFila3[0].RutaDestino == (Rutas)1 && carrosFila1.Count == 0)
+                {
+                    avanzarFila3();
+                }
+
                 //Proceso de semaforo 1
+                //Verder/ Amarillo
+                if ((Semaforo1.Verde || Semaforo1.Amarillo) && carrosFila1.Count > 0)
+                {
+                    avanzarFila1();
+                    if (carrosFila1.Count > 0)
+                        avanzarFila1();
+                }
+                //Rojo
+                if (Semaforo1.Rojo && carrosFila1.Count > 0 && carrosFila1[0].RutaDestino == (Rutas)2)
+                {
+                    avanzarFila1();
+                    if (carrosFila1.Count > 0)
+                        avanzarFila1();
+                }
+
+                //Proceso de semaforo 2
+                //Verder/ Amarillo
+                if ((Semaforo2.Verde || Semaforo2.Amarillo) && carrosFila2.Count > 0 && carrosFila2.Any(carro => carro.RutaDestino == 0))
+                {
+                    avanzarFila2();
+                    if (carrosFila2.Count > 0)
+                        avanzarFila2();
+                }
+                //Verde Doblar
+                if (Semaforo2.VerdeDoblar && carrosFila2.Count > 0 && carrosFila2.Any(carro => carro.RutaDestino == (Rutas)2))
+                {
+                    avanzarFila2();
+                    if (carrosFila1.Count > 0 && carrosFila2.Any(carro => carro.RutaDestino == (Rutas)3))
+                        avanzarFila2();
+                }
+                
+
+
+                //Proceso de semaforo 3
+                //Verder/ Amarillo
+                if ((Semaforo3.Verde || Semaforo3.Amarillo) && carrosFila3.Count > 0)
+                {
+                    avanzarFila2();
+                }
+                
+
+                //Tiempos de Semaforos
+
+                //Semaforo1
                 if (Semaforo1.Verde)
                 {
-
+                    if (tiempoVerdeSem1 == Semaforo1.TiempoVerde)
+                    {
+                        tiempoVerdeSem1 = 0;
+                        Semaforo1.Verde_Amarillo();
+                    }
+                    tiempoVerdeSem1++;
+                }else
+                {
+                    if (Semaforo1.Amarillo)
+                    {
+                        if (tiempoAmarilloSem1 == Semaforo1.TiempoAmarillo)
+                        {
+                            tiempoAmarilloSem1 = 0;
+                            Semaforo1.Amarillo_Rojo();
+                        }
+                        tiempoAmarilloSem1++;
+                    }else
+                    {
+                        if (tiempoRojoSem1 == Semaforo1.TiempoRojo)
+                        {
+                            tiempoRojoSem1 = 0;
+                            Semaforo1.Rojo_Verde();
+                        }
+                        tiempoRojoSem1++;
+                        foreach(Carros carro in carrosFila1)
+                        {
+                            carro.TiempoDeEspera++;
+                        }
+                    }
                 }
+
+                //Semaforo2
+                if (Semaforo2.Verde)
+                {
+                    if (tiempoVerdeSem2 == Semaforo2.TiempoVerde)
+                    {
+                        tiempoVerdeSem2 = 0;
+                        Semaforo2.Verde_Amarillo();
+                    }
+                    tiempoVerdeSem2++;
+                }
+                else
+                {
+                    if (Semaforo2.Amarillo)
+                    {
+                        if (tiempoAmarilloSem2 == Semaforo2.TiempoAmarillo)
+                        {
+                            tiempoAmarilloSem2 = 0;
+                            Semaforo2.Amarillo_Rojo();
+                        }
+                        tiempoAmarilloSem2++;
+                    }
+                    else
+                    {
+                        if (tiempoRojoSem2 == Semaforo2.TiempoRojo)
+                        {
+                            tiempoRojoSem2 = 0;
+                            Semaforo2.Rojo_Verde();
+                        }
+                        tiempoRojoSem2++;
+                        foreach (Carros carro in carrosFila2)
+                        {
+                            carro.TiempoDeEspera++;
+                        }
+                    }
+                }
+
+                //Semaforo3
+                if (Semaforo3.Verde)
+                {
+                    if (tiempoVerdeSem3 == Semaforo3.TiempoVerde)
+                    {
+                        tiempoVerdeSem3 = 0;
+                        Semaforo3.Verde_Amarillo();
+                    }
+                    tiempoVerdeSem3++;
+                }
+                else
+                {
+                    if (Semaforo3.Amarillo)
+                    {
+                        if (tiempoAmarilloSem3 == Semaforo3.TiempoAmarillo)
+                        {
+                            tiempoAmarilloSem3 = 0;
+                            Semaforo3.Amarillo_Rojo();
+                        }
+                        tiempoAmarilloSem3++;
+                    }
+                    else
+                    {
+                        if (tiempoRojoSem3 == Semaforo3.TiempoRojo)
+                        {
+                            tiempoRojoSem3 = 0;
+                            Semaforo3.Rojo_Verde();
+                        }
+                        tiempoRojoSem3++;
+                        foreach (Carros carro in carrosFila3)
+                        {
+                            carro.TiempoDeEspera++;
+                        }
+                    }
+                }
+
+
+
+
+
+
+
 
 
             }
             InitializeComponent();
-           
+
         }
 
+        private void avanzarFila1()
+        {
+            
+            tiempoEspera += carrosFila1[0].TiempoDeEspera;
+            switch ((int)carrosFila1[0].RutaDestino)
+            {
+                case 1:
+                    carrosR1R2++;
+                    break;
 
-       
+                case 2:
+                    carrosR1R3++;
+                    break;
+
+                default:
+                    break;
+            }
+            carrosFila1.RemoveAt(0);
+        }
+
+        private void avanzarFila2()
+        {
+            tiempoEspera += carrosFila2[0].TiempoDeEspera;
+            switch ((int)carrosFila2[0].RutaDestino)
+            {
+                case 1:
+                    carrosR2R1++;
+                    break;
+
+                case 2:
+                    carrosR2R3++;
+                    break;
+
+                default:
+                    break;
+            }
+            carrosFila2.RemoveAt(0);
+        }
+
+        private void avanzarFila3()
+        {
+            tiempoEspera += carrosFila3[0].TiempoDeEspera;
+            switch ((int)carrosFila3[0].RutaDestino)
+            {
+                case 1:
+                    carrosR3R1++;
+                    break;
+
+                case 2:
+                    carrosR3R2++;
+                    break;
+
+                default:
+                    break;
+            }
+            carrosFila3.RemoveAt(0);
+        }
+
     }
 }
