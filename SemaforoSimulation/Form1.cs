@@ -9,7 +9,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SemaforoSimulation
-{
+{     
+    
+    //enum que define las rutas
+
     public enum Rutas
     {
         Macoris = 0,
@@ -30,13 +33,12 @@ namespace SemaforoSimulation
         int tiempoRojoSem2;
         int tiempoRojoSem3;
 
-        //enum que define las rutas
-
         // Variables Editables
         int eTiempoVerdeSemaforo1y2;
         int eTiempoAmarillo;
         int eTiempoRojoSemaforo1y2;
         int eTiempoVerdeDoblarSemaforo1y2;
+
 
 
         //Totales de carros que van de una ruta a otra
@@ -168,13 +170,14 @@ namespace SemaforoSimulation
             eTiempoRojoSemaforo1y2 = Convert.ToInt16(TiempoRojo12Tb.Text);
             eTiempoVerdeDoblarSemaforo1y2 = Convert.ToInt16(VerdeDoblar12Tb.Text);
 
+
             ErrorProvider EP1 = new ErrorProvider();
             if (ValidarTextBox(VerdeDoblar12Tb, EP1, "El tiempo en rojo no debe ser menor que verde doblar!"))
             {
 
                 //Inicializando valores por defecto
                 Random rand = new Random();
-                tiempo = 28800;
+                tiempo = Convert.ToInt32(eTiempoSimulacionTb.Text);
                 tiempoEspera = 0;
                 //Inicializando Semaforos (Semaforo 1 y 2 inician en verde)
                 Semaforo Semaforo1 = new Semaforo(eTiempoRojoSemaforo1y2, eTiempoVerdeSemaforo1y2, eTiempoAmarillo, 2);
@@ -213,19 +216,23 @@ namespace SemaforoSimulation
                     if (rand.Next(1, 101) <= 40)
                     {
                         Carros carro = new Carros(0);
-                        carro.RutaDestino = (Rutas)rand.Next(0, 3);
+                        carro.RutaDestino = (Rutas)rand.Next(1,3);
                         carrosFila1.Add(carro);
                     }
                     if (rand.Next(1, 101) <= 35)
                     {
                         Carros carro = new Carros(0);
-                        carro.RutaDestino = (Rutas)rand.Next(0, 3);
+                        int valor = rand.Next(0, 3);
+                        while (valor == 1)
+                            valor = rand.Next(0, 3);
+                        carro.RutaDestino = (Rutas)valor;
+                        
                         carrosFila2.Add(carro);
                     }
                     if (rand.Next(1, 101) <= 25)
                     {
                         Carros carro = new Carros(0);
-                        carro.RutaDestino = (Rutas)rand.Next(0, 3);
+                        carro.RutaDestino = (Rutas)rand.Next(0, 2);
                         carrosFila3.Add(carro);
                     }
 
@@ -406,6 +413,7 @@ namespace SemaforoSimulation
             TiempoAmarilloTb.Text = "3";
             TiempoRojo12Tb.Text = "30";
             VerdeDoblar12Tb.Text = "10";
+            eTiempoSimulacionTb.Text = "28800";
         }
     }
 }

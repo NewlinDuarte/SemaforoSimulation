@@ -59,6 +59,8 @@
             this.TiempoRojo12Tb = new System.Windows.Forms.TextBox();
             this.VerdeDoblar12Tb = new System.Windows.Forms.TextBox();
             this.standardButton = new System.Windows.Forms.Button();
+            this.eTiempoSimulacionTb = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -332,7 +334,7 @@
             // 
             // standardButton
             // 
-            this.standardButton.Location = new System.Drawing.Point(76, 318);
+            this.standardButton.Location = new System.Drawing.Point(76, 343);
             this.standardButton.Name = "standardButton";
             this.standardButton.Size = new System.Drawing.Size(396, 23);
             this.standardButton.TabIndex = 30;
@@ -340,11 +342,30 @@
             this.standardButton.UseVisualStyleBackColor = true;
             this.standardButton.Click += new System.EventHandler(this.standardButton_Click);
             // 
+            // eTiempoSimulacionTb
+            // 
+            this.eTiempoSimulacionTb.Location = new System.Drawing.Point(367, 315);
+            this.eTiempoSimulacionTb.Name = "eTiempoSimulacionTb";
+            this.eTiempoSimulacionTb.Size = new System.Drawing.Size(100, 20);
+            this.eTiempoSimulacionTb.TabIndex = 32;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(73, 318);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(218, 13);
+            this.label17.TabIndex = 31;
+            this.label17.Text = "Tiempo de simulación (En segundos):";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(522, 708);
+            this.Controls.Add(this.eTiempoSimulacionTb);
+            this.Controls.Add(this.label17);
             this.Controls.Add(this.standardButton);
             this.Controls.Add(this.VerdeDoblar12Tb);
             this.Controls.Add(this.TiempoRojo12Tb);
@@ -415,6 +436,8 @@
         private System.Windows.Forms.TextBox TiempoRojo12Tb;
         private System.Windows.Forms.TextBox VerdeDoblar12Tb;
         private System.Windows.Forms.Button standardButton;
+        private System.Windows.Forms.TextBox eTiempoSimulacionTb;
+        private System.Windows.Forms.Label label17;
     }
 }
 
