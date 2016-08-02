@@ -9,7 +9,7 @@ namespace SemaforoSimulation
 {
 
 
-    public class Carros : IEquatable<Carros>
+    public class Carros 
     {
         public int TiempoDeEspera;
 
@@ -19,15 +19,12 @@ namespace SemaforoSimulation
 
         public Carros(Rutas RutaInicio)
         {
+            TiempoDeEspera = 0;
             this.RutaInicio = RutaInicio;
         }
 
 
-        public bool Equals(Carros other)
-        {
-            // Would still want to check for null etc. first.
-            return this.
-        }
+        
     }
 
 
