@@ -49,6 +49,16 @@
             this.R2R3Tb = new System.Windows.Forms.TextBox();
             this.R3R1Tb = new System.Windows.Forms.TextBox();
             this.R3R2Tb = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.Semaforo12Tb = new System.Windows.Forms.TextBox();
+            this.TiempoAmarilloTb = new System.Windows.Forms.TextBox();
+            this.TiempoRojo12Tb = new System.Windows.Forms.TextBox();
+            this.VerdeDoblar12Tb = new System.Windows.Forms.TextBox();
+            this.standardButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -242,11 +252,109 @@
             this.R3R2Tb.Size = new System.Drawing.Size(100, 20);
             this.R3R2Tb.TabIndex = 20;
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(17, 369);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(109, 20);
+            this.label12.TabIndex = 21;
+            this.label12.Text = "Resultados:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(73, 195);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(196, 13);
+            this.label13.TabIndex = 22;
+            this.label13.Text = "Tiempo en Verde Semaforo 1 y 2:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(73, 225);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(211, 13);
+            this.label14.TabIndex = 23;
+            this.label14.Text = "Tiempo en Amarillo de los semaforo:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(73, 258);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(163, 13);
+            this.label15.TabIndex = 24;
+            this.label15.Text = "Tiempo en Rojo Ruta 1 y 2:";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(73, 290);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(194, 13);
+            this.label16.TabIndex = 25;
+            this.label16.Text = "Tiempo VerdeDoblar Semaforo 2:";
+            // 
+            // Semaforo12Tb
+            // 
+            this.Semaforo12Tb.Location = new System.Drawing.Point(367, 188);
+            this.Semaforo12Tb.Name = "Semaforo12Tb";
+            this.Semaforo12Tb.Size = new System.Drawing.Size(100, 20);
+            this.Semaforo12Tb.TabIndex = 26;
+            // 
+            // TiempoAmarilloTb
+            // 
+            this.TiempoAmarilloTb.Location = new System.Drawing.Point(367, 222);
+            this.TiempoAmarilloTb.Name = "TiempoAmarilloTb";
+            this.TiempoAmarilloTb.Size = new System.Drawing.Size(100, 20);
+            this.TiempoAmarilloTb.TabIndex = 27;
+            // 
+            // TiempoRojo12Tb
+            // 
+            this.TiempoRojo12Tb.Location = new System.Drawing.Point(367, 251);
+            this.TiempoRojo12Tb.Name = "TiempoRojo12Tb";
+            this.TiempoRojo12Tb.Size = new System.Drawing.Size(100, 20);
+            this.TiempoRojo12Tb.TabIndex = 28;
+            // 
+            // VerdeDoblar12Tb
+            // 
+            this.VerdeDoblar12Tb.Location = new System.Drawing.Point(367, 287);
+            this.VerdeDoblar12Tb.Name = "VerdeDoblar12Tb";
+            this.VerdeDoblar12Tb.Size = new System.Drawing.Size(100, 20);
+            this.VerdeDoblar12Tb.TabIndex = 29;
+            // 
+            // standardButton
+            // 
+            this.standardButton.Location = new System.Drawing.Point(76, 318);
+            this.standardButton.Name = "standardButton";
+            this.standardButton.Size = new System.Drawing.Size(396, 23);
+            this.standardButton.TabIndex = 30;
+            this.standardButton.Text = "Llenar con valores predeterminados";
+            this.standardButton.UseVisualStyleBackColor = true;
+            this.standardButton.Click += new System.EventHandler(this.standardButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(553, 708);
+            this.ClientSize = new System.Drawing.Size(522, 708);
+            this.Controls.Add(this.standardButton);
+            this.Controls.Add(this.VerdeDoblar12Tb);
+            this.Controls.Add(this.TiempoRojo12Tb);
+            this.Controls.Add(this.TiempoAmarilloTb);
+            this.Controls.Add(this.Semaforo12Tb);
+            this.Controls.Add(this.label16);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.R3R2Tb);
             this.Controls.Add(this.R3R1Tb);
             this.Controls.Add(this.R2R3Tb);
@@ -297,6 +405,16 @@
         private System.Windows.Forms.TextBox R2R3Tb;
         private System.Windows.Forms.TextBox R3R1Tb;
         private System.Windows.Forms.TextBox R3R2Tb;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox Semaforo12Tb;
+        private System.Windows.Forms.TextBox TiempoAmarilloTb;
+        private System.Windows.Forms.TextBox TiempoRojo12Tb;
+        private System.Windows.Forms.TextBox VerdeDoblar12Tb;
+        private System.Windows.Forms.Button standardButton;
     }
 }
 

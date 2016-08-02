@@ -32,6 +32,13 @@ namespace SemaforoSimulation
 
         //enum que define las rutas
 
+        // Variables Editables
+        int eTiempoVerdeSemaforo1y2;
+        int eTiempoAmarillo;
+        int eTiempoRojoSemaforo1y2;
+        int eTiempoVerdeDoblarSemaforo1y2;
+
+
         //Totales de carros que van de una ruta a otra
         int carrosR1R2;
         int carrosR1R3;
@@ -58,22 +65,22 @@ namespace SemaforoSimulation
 
         public Form1()
         {
-            
+
             InitializeComponent();
-            
+
 
 
         }
 
         private void avanzarFila1()
         {
-            if(carrosFila1[0].TiempoDeEspera > 0)
+            if (carrosFila1[0].TiempoDeEspera > 0)
             {
                 tiempoEspera += carrosFila1[0].TiempoDeEspera;
                 esperaSemaforo1++;
             }
-            
-           
+
+
             switch ((int)carrosFila1[0].RutaDestino)
             {
                 case 1:
@@ -110,7 +117,7 @@ namespace SemaforoSimulation
                 default:
                     break;
             }
-            carrosFila2.RemoveAt(0);            
+            carrosFila2.RemoveAt(0);
         }
 
         private void avanzarFila3()
@@ -136,234 +143,269 @@ namespace SemaforoSimulation
             carrosFila3.RemoveAt(0);
         }
 
+
+        // que verde doblar no puede ser mayor que rojo
+        public bool ValidarTextBox(TextBox TextoValidar, ErrorProvider ErrProvider, string MensajedeError)
+        {
+            bool valido = true;
+            int ValorRojo = Convert.ToInt16(TiempoRojo12Tb.Text);
+            int ValorVDoblar = Convert.ToInt16(VerdeDoblar12Tb.Text);
+
+            if (ValorRojo <= ValorVDoblar)
+            {
+                ErrProvider.SetError(TextoValidar, MensajedeError);
+                TextoValidar.Focus();
+                valido = false;
+            }
+
+            return valido;
+        }
+
         private void SimularButton_Click(object sender, EventArgs e)
         {
-            //Inicializando valores por defecto
-            Random rand = new Random();
-            tiempo = 28800;
-            tiempoEspera = 0;
-            //Inicializando Semaforos (Semaforo 1 y 2 inician en verde)
-            Semaforo Semaforo1 = new Semaforo(30, 27, 3, 2);
-            Semaforo1.Rojo_Verde();
+            eTiempoVerdeSemaforo1y2 = Convert.ToInt16(Semaforo12Tb.Text);
+            eTiempoAmarillo = Convert.ToInt16(TiempoAmarilloTb.Text);
+            eTiempoRojoSemaforo1y2 = Convert.ToInt16(TiempoRojo12Tb.Text);
+            eTiempoVerdeDoblarSemaforo1y2 = Convert.ToInt16(VerdeDoblar12Tb.Text);
 
-            Semaforo Semaforo2 = new Semaforo(20, 27, 3, 10, 2);
-            Semaforo2.Rojo_Verde();
-
-            Semaforo Semaforo3 = new Semaforo(40, 17, 3, 1);
-            Semaforo3.Amarillo_Rojo();
-
-            //inicializando valores de resultado;
-            carrosR1R2 =0;
-            carrosR1R3 =0;
-            carrosR2R1 =0;
-            carrosR2R3 =0;
-            carrosR3R1 =0;
-            carrosR3R2 =0;
-
-            // Inicializando los Tiempos de semaforos
-            tiempoVerdeSem1 = 0;
-            tiempoVerdeSem2 = 0;
-            tiempoVerdeDoblarSem2 = 0;
-            tiempoVerdeSem3 = 0;
-            tiempoAmarilloSem1 = 0;
-            tiempoAmarilloSem2 = 0;
-            tiempoAmarilloSem3 = 0;
-            tiempoRojoSem1 = 0;
-            tiempoRojoSem2 = 0;
-            tiempoRojoSem3 = 0;
-
-            for (int x = 1; x <= tiempo; x++)
+            ErrorProvider EP1 = new ErrorProvider();
+            if (ValidarTextBox(VerdeDoblar12Tb, EP1, "El tiempo en rojo no debe ser menor que verde doblar!"))
             {
 
-                //agregar nuevo carro a lista 
-                if (rand.Next(1, 101) <= 40)
-                {
-                    Carros carro = new Carros(0);
-                    carro.RutaDestino = (Rutas)rand.Next(0, 3);
-                    carrosFila1.Add(carro);
-                }
-                if (rand.Next(1, 101) <= 35)
-                {
-                    Carros carro = new Carros(0);
-                    carro.RutaDestino = (Rutas)rand.Next(0, 3);
-                    carrosFila2.Add(carro);
-                }
-                if (rand.Next(1, 101) <= 25)
-                {
-                    Carros carro = new Carros(0);
-                    carro.RutaDestino = (Rutas)rand.Next(0, 3);
-                    carrosFila3.Add(carro);
-                }
+                //Inicializando valores por defecto
+                Random rand = new Random();
+                tiempo = 28800;
+                tiempoEspera = 0;
+                //Inicializando Semaforos (Semaforo 1 y 2 inician en verde)
+                Semaforo Semaforo1 = new Semaforo(eTiempoRojoSemaforo1y2, eTiempoVerdeSemaforo1y2, eTiempoAmarillo, 2);
+                Semaforo1.Rojo_Verde();
 
-                //Rojo de Semaforo 3 tiene que verificar existencia de carros en R1
-                if (Semaforo3.Rojo && carrosFila3.Count > 0 && carrosFila3[0].RutaDestino == (Rutas)1 && carrosFila1.Count == 0)
-                {
-                    avanzarFila3();
-                }
+                Semaforo Semaforo2 = new Semaforo(eTiempoRojoSemaforo1y2, eTiempoVerdeSemaforo1y2, eTiempoAmarillo, eTiempoVerdeDoblarSemaforo1y2, 2);
+                Semaforo2.Rojo_Verde();
 
-                //Proceso de semaforo 1
-                //Verder/ Amarillo
-                if ((Semaforo1.Verde || Semaforo1.Amarillo) && carrosFila1.Count > 0)
+                Semaforo Semaforo3 = new Semaforo((eTiempoVerdeSemaforo1y2 + eTiempoAmarillo + eTiempoVerdeDoblarSemaforo1y2), (eTiempoVerdeSemaforo1y2 - eTiempoVerdeDoblarSemaforo1y2), eTiempoAmarillo, 1);
+                Semaforo3.Amarillo_Rojo();
+
+                //inicializando valores de resultado;
+                carrosR1R2 = 0;
+                carrosR1R3 = 0;
+                carrosR2R1 = 0;
+                carrosR2R3 = 0;
+                carrosR3R1 = 0;
+                carrosR3R2 = 0;
+
+                // Inicializando los Tiempos de semaforos
+                tiempoVerdeSem1 = 0;
+                tiempoVerdeSem2 = 0;
+                tiempoVerdeDoblarSem2 = 0;
+                tiempoVerdeSem3 = 0;
+                tiempoAmarilloSem1 = 0;
+                tiempoAmarilloSem2 = 0;
+                tiempoAmarilloSem3 = 0;
+                tiempoRojoSem1 = 0;
+                tiempoRojoSem2 = 0;
+                tiempoRojoSem3 = 0;
+
+                for (int x = 1; x <= tiempo; x++)
                 {
-                    avanzarFila1();
-                    if (carrosFila1.Count > 0)
+
+                    //agregar nuevo carro a lista 
+                    if (rand.Next(1, 101) <= 40)
+                    {
+                        Carros carro = new Carros(0);
+                        carro.RutaDestino = (Rutas)rand.Next(0, 3);
+                        carrosFila1.Add(carro);
+                    }
+                    if (rand.Next(1, 101) <= 35)
+                    {
+                        Carros carro = new Carros(0);
+                        carro.RutaDestino = (Rutas)rand.Next(0, 3);
+                        carrosFila2.Add(carro);
+                    }
+                    if (rand.Next(1, 101) <= 25)
+                    {
+                        Carros carro = new Carros(0);
+                        carro.RutaDestino = (Rutas)rand.Next(0, 3);
+                        carrosFila3.Add(carro);
+                    }
+
+                    //Rojo de Semaforo 3 tiene que verificar existencia de carros en R1
+                    if (Semaforo3.Rojo && carrosFila3.Count > 0 && carrosFila3[0].RutaDestino == (Rutas)1 && carrosFila1.Count == 0)
+                    {
+                        avanzarFila3();
+                    }
+
+                    //Proceso de semaforo 1
+                    //Verder/ Amarillo
+                    if ((Semaforo1.Verde || Semaforo1.Amarillo) && carrosFila1.Count > 0)
+                    {
                         avanzarFila1();
-                }
-                //Rojo
-                if (Semaforo1.Rojo && carrosFila1.Count > 0 && carrosFila1[0].RutaDestino == (Rutas)2)
-                {
-                    avanzarFila1();
-                    if (carrosFila1.Count > 0)
+                        if (carrosFila1.Count > 0)
+                            avanzarFila1();
+                    }
+                    //Rojo
+                    if (Semaforo1.Rojo && carrosFila1.Count > 0 && carrosFila1[0].RutaDestino == (Rutas)2)
+                    {
                         avanzarFila1();
-                }
+                        if (carrosFila1.Count > 0)
+                            avanzarFila1();
+                    }
 
-                //Proceso de semaforo 2
-                //Verder/ Amarillo
-                if ((Semaforo2.Verde || Semaforo2.Amarillo) && carrosFila2.Count > 0 && carrosFila2.Any(carro => carro.RutaDestino == 0))
-                {
-                    avanzarFila2();
-                    if (carrosFila2.Count > 0)
+                    //Proceso de semaforo 2
+                    //Verder/ Amarillo
+                    if ((Semaforo2.Verde || Semaforo2.Amarillo) && carrosFila2.Count > 0 && carrosFila2.Any(carro => carro.RutaDestino == 0))
+                    {
                         avanzarFila2();
-                }
-                //Verde Doblar
-                if (Semaforo2.VerdeDoblar && carrosFila2.Count > 0 && carrosFila2.Any(carro => carro.RutaDestino == (Rutas)2))
-                {
-                    avanzarFila2();
-                    if (carrosFila1.Count > 0 && carrosFila2.Any(carro => carro.RutaDestino == (Rutas)3))
+                        if (carrosFila2.Count > 0)
+                            avanzarFila2();
+                    }
+                    //Verde Doblar
+                    if (Semaforo2.VerdeDoblar && carrosFila2.Count > 0 && carrosFila2.Any(carro => carro.RutaDestino == (Rutas)2))
+                    {
                         avanzarFila2();
-                }
-
-
-
-                //Proceso de semaforo 3
-                //Verder/ Amarillo
-                if ((Semaforo3.Verde || Semaforo3.Amarillo) && carrosFila3.Count > 0)
-                {
-                    avanzarFila3();
-                }
-
-
-                //Tiempos de Semaforos
-
-                //Semaforo1
-                if (Semaforo1.Verde)
-                {
-                    if (tiempoVerdeSem1 == Semaforo1.TiempoVerde)
-                    {
-                        tiempoVerdeSem1 = 0;
-                        Semaforo1.Verde_Amarillo();
+                        if (carrosFila1.Count > 0 && carrosFila2.Any(carro => carro.RutaDestino == (Rutas)3))
+                            avanzarFila2();
                     }
-                    tiempoVerdeSem1++;
-                }
-                else
-                {
-                    if (Semaforo1.Amarillo)
+
+
+
+                    //Proceso de semaforo 3
+                    //Verder/ Amarillo
+                    if ((Semaforo3.Verde || Semaforo3.Amarillo) && carrosFila3.Count > 0)
                     {
-                        if (tiempoAmarilloSem1 == Semaforo1.TiempoAmarillo)
+                        avanzarFila3();
+                    }
+
+
+                    //Tiempos de Semaforos
+
+                    //Semaforo1
+                    if (Semaforo1.Verde)
+                    {
+                        if (tiempoVerdeSem1 == Semaforo1.TiempoVerde)
                         {
-                            tiempoAmarilloSem1 = 0;
-                            Semaforo1.Amarillo_Rojo();
+                            tiempoVerdeSem1 = 0;
+                            Semaforo1.Verde_Amarillo();
                         }
-                        tiempoAmarilloSem1++;
+                        tiempoVerdeSem1++;
                     }
                     else
                     {
-                        if (tiempoRojoSem1 == Semaforo1.TiempoRojo)
+                        if (Semaforo1.Amarillo)
                         {
-                            tiempoRojoSem1 = 0;
-                            Semaforo1.Rojo_Verde();
+                            if (tiempoAmarilloSem1 == Semaforo1.TiempoAmarillo)
+                            {
+                                tiempoAmarilloSem1 = 0;
+                                Semaforo1.Amarillo_Rojo();
+                            }
+                            tiempoAmarilloSem1++;
                         }
-                        tiempoRojoSem1++;
-                        foreach (Carros carro in carrosFila1)
+                        else
                         {
-                            carro.TiempoDeEspera++;
+                            if (tiempoRojoSem1 == Semaforo1.TiempoRojo)
+                            {
+                                tiempoRojoSem1 = 0;
+                                Semaforo1.Rojo_Verde();
+                            }
+                            tiempoRojoSem1++;
+                            foreach (Carros carro in carrosFila1)
+                            {
+                                carro.TiempoDeEspera++;
+                            }
                         }
                     }
-                }
 
-                //Semaforo2
-                if (Semaforo2.Verde)
-                {
-                    if (tiempoVerdeSem2 == Semaforo2.TiempoVerde)
+                    //Semaforo2
+                    if (Semaforo2.Verde)
                     {
-                        tiempoVerdeSem2 = 0;
-                        Semaforo2.Verde_Amarillo();
-                    }
-                    tiempoVerdeSem2++;
-                }
-                else
-                {
-                    if (Semaforo2.Amarillo)
-                    {
-                        if (tiempoAmarilloSem2 == Semaforo2.TiempoAmarillo)
+                        if (tiempoVerdeSem2 == Semaforo2.TiempoVerde)
                         {
-                            tiempoAmarilloSem2 = 0;
-                            Semaforo2.Amarillo_Rojo();
-                            Semaforo2.ActivarVerdeDoblar();
+                            tiempoVerdeSem2 = 0;
+                            Semaforo2.Verde_Amarillo();
                         }
-                        tiempoAmarilloSem2++;
+                        tiempoVerdeSem2++;
                     }
                     else
                     {
-                        if (tiempoRojoSem2 == Semaforo2.TiempoRojo)
+                        if (Semaforo2.Amarillo)
                         {
-                            tiempoRojoSem2 = 0;
-                            Semaforo2.Rojo_Verde();
+                            if (tiempoAmarilloSem2 == Semaforo2.TiempoAmarillo)
+                            {
+                                tiempoAmarilloSem2 = 0;
+                                Semaforo2.Amarillo_Rojo();
+                                Semaforo2.ActivarVerdeDoblar();
+                            }
+                            tiempoAmarilloSem2++;
                         }
-                        if (tiempoVerdeDoblarSem2 == Semaforo2.TiempoVerdeDoblar)
-                            Semaforo2.DesactivarVerdeDoblar();
-                        tiempoRojoSem2++;
-                        tiempoVerdeDoblarSem2++;
-                        foreach (Carros carro in carrosFila2)
+                        else
                         {
-                            carro.TiempoDeEspera++;
+                            if (tiempoRojoSem2 == Semaforo2.TiempoRojo)
+                            {
+                                tiempoRojoSem2 = 0;
+                                Semaforo2.Rojo_Verde();
+                            }
+                            if (tiempoVerdeDoblarSem2 == Semaforo2.TiempoVerdeDoblar)
+                                Semaforo2.DesactivarVerdeDoblar();
+                            tiempoRojoSem2++;
+                            tiempoVerdeDoblarSem2++;
+                            foreach (Carros carro in carrosFila2)
+                            {
+                                carro.TiempoDeEspera++;
+                            }
                         }
                     }
-                }
 
-                //Semaforo3
-                if (Semaforo3.Verde)
-                {
-                    if (tiempoVerdeSem3 == Semaforo3.TiempoVerde)
+                    //Semaforo3
+                    if (Semaforo3.Verde)
                     {
-                        tiempoVerdeSem3 = 0;
-                        Semaforo3.Verde_Amarillo();
-                    }
-                    tiempoVerdeSem3++;
-                }
-                else
-                {
-                    if (Semaforo3.Amarillo)
-                    {
-                        if (tiempoAmarilloSem3 == Semaforo3.TiempoAmarillo)
+                        if (tiempoVerdeSem3 == Semaforo3.TiempoVerde)
                         {
-                            tiempoAmarilloSem3 = 0;
-                            Semaforo3.Amarillo_Rojo();
+                            tiempoVerdeSem3 = 0;
+                            Semaforo3.Verde_Amarillo();
                         }
-                        tiempoAmarilloSem3++;
+                        tiempoVerdeSem3++;
                     }
                     else
                     {
-                        if (tiempoRojoSem3 == Semaforo3.TiempoRojo)
+                        if (Semaforo3.Amarillo)
                         {
-                            tiempoRojoSem3 = 0;
-                            Semaforo3.Rojo_Verde();
+                            if (tiempoAmarilloSem3 == Semaforo3.TiempoAmarillo)
+                            {
+                                tiempoAmarilloSem3 = 0;
+                                Semaforo3.Amarillo_Rojo();
+                            }
+                            tiempoAmarilloSem3++;
                         }
-                        tiempoRojoSem3++;
-                        foreach (Carros carro in carrosFila3)
+                        else
                         {
-                            carro.TiempoDeEspera++;
+                            if (tiempoRojoSem3 == Semaforo3.TiempoRojo)
+                            {
+                                tiempoRojoSem3 = 0;
+                                Semaforo3.Rojo_Verde();
+                            }
+                            tiempoRojoSem3++;
+                            foreach (Carros carro in carrosFila3)
+                            {
+                                carro.TiempoDeEspera++;
+                            }
                         }
                     }
                 }
+                TiempoEsperaTb.Text = (tiempoEspera / 60).ToString();
+                R1R2Tb.Text = carrosR1R2.ToString();
+                R1R3Tb.Text = carrosR1R3.ToString();
+                R2R1Tb.Text = carrosR2R1.ToString();
+                R2R3Tb.Text = carrosR2R3.ToString();
+                R3R1Tb.Text = carrosR3R1.ToString();
+                R3R2Tb.Text = carrosR3R2.ToString();
             }
-            TiempoEsperaTb.Text = (tiempoEspera / 60).ToString();
-            R1R2Tb.Text = carrosR1R2.ToString();
-            R1R3Tb.Text = carrosR1R3.ToString();
-            R2R1Tb.Text = carrosR2R1.ToString();
-            R2R3Tb.Text = carrosR2R3.ToString();
-            R3R1Tb.Text = carrosR3R1.ToString();
-            R3R2Tb.Text = carrosR3R2.ToString();
+        }
+        private void standardButton_Click(object sender, EventArgs e)
+        {
+            Semaforo12Tb.Text = "27";
+            TiempoAmarilloTb.Text = "3";
+            TiempoRojo12Tb.Text = "30";
+            VerdeDoblar12Tb.Text = "10";
         }
     }
 }
